@@ -1,20 +1,58 @@
 #!/usr/bin/env node
 
+// Allow coffeescript requires
+require('coffee-script');
+
+// Use path for processing cli module names
+var path = require('path');
+
+// Commander module
 // https://github.com/visionmedia/commander.js
 var program = require('commander');
+
+// Package.json
 var pkg = require('../package');
 
-// Process stdin
+// =======================================================================================================
+// Load all CLI modules
+// =======================================================================================================
 
+// Modules object
+var cli = {};
+
+// Perform glob of cli modules.
+// !! Important to run the glob synchronously to avoid undefined program actions !!
+require('glob')('../steno/cli/*', {sync: true, nosort: true, cwd: __dirname}, function(err, files) {
+	
+	// Loop over glob results
+	files.forEach(function(file){
+		
+		// Get module name
+		var module = path.basename(file, '.coffee');
+		
+		// Require module to cli object
+		cli[module] = require(file);
+	});
+});
+
+// =======================================================================================================
+// Steno CLI commands
+// =======================================================================================================
+
+// Help option alias
+program
+	.command('help')
+	.description('Alias of --help option')
+	.action(program.help);
+
+// Deploy Steno command
+program
+	.command('deploy')
+	.description('Install a new instance of Steno to the current directory')
+	.action(cli.deploy);
+
+// Final argument parsing
 program
 	.version(pkg.version)
-	.usage('[command] <args>');
-
-program
-	.command('new')
-	.action()
-	.option('-p, --option', 'Option')
+	.usage('[command] <args>')
 	.parse(process.argv);
-
-
-
