@@ -1,6 +1,6 @@
 .DS_Store
 node_modules/
-steno/database/
+steno/database/*.sqlite
 *.log
 config/*
 !config/sample_*
