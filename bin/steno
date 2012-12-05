@@ -14,11 +14,8 @@ var program = require('commander');
 var pkg = require('../package');
 
 // =======================================================================================================
-// Load all CLI modules
+// Load all CLI modules to program actions
 // =======================================================================================================
-
-// Modules object
-var cli = {};
 
 // Perform glob of cli modules.
 // !! Important to run the glob synchronously to avoid undefined program actions !!
@@ -28,10 +25,16 @@ require('glob')('../steno/cli/*', {sync: true, nosort: true, cwd: __dirname}, fu
 	files.forEach(function(file){
 		
 		// Get module name
-		var module = path.basename(file, '.coffee');
-		
-		// Require module to cli object
-		cli[module] = require(file);
+		var cmdName = path.basename(file, '.coffee');
+
+		// Get module
+		var cmd = require(file);
+
+		// Add command to programmer
+		program
+			.command(cmdName)
+			.description(cmd.description)
+			.action(cmd.action);
 	});
 });
 
@@ -44,12 +47,6 @@ program
 	.command('help')
 	.description('Alias of --help option')
 	.action(program.help);
-
-// Deploy Steno command
-program
-	.command('deploy')
-	.description('Install a new instance of Steno to the current directory')
-	.action(cli.deploy);
 
 // Final argument parsing
 program
