@@ -6,7 +6,7 @@
 config = require '../config'
 
 MailParser = require('mailparser').MailParser 	# https://github.com/andris9/mailparser
-jquery = require 'jquery'						# https://github.com/coolaj86/node-jquery
+cheerio = require 'cheerio'						# https://github.com/MatthewMueller/cheerio
 
 # Get database object
 db = require './db'
@@ -35,9 +35,15 @@ module.exports = (raw) ->
 
 		# Get html or text from parsed email
 		rawMsg = email.html or email.text
+		
+		# Load message into cheerio wrapped into 'steno' div
+		$ = cheerio.load "<div id='root_steno_container'>#{rawMsg}</div>"
 
-		# Wrap content in div as makes it safe html for jQuery to process then strip html
-		message = do jquery("<div>#{rawMsg}</div>").text
+		# Get raw text
+		message = do $('#root_steno_container').text
+
+		# Strip Airmail style prefix
+		message = message.replace 'body{font-family:Helvetica,Arial;font-size:13px}', ''
 
 		# Split at delimiters
 		message = (message.split '--END--')[0]
