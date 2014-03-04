@@ -8,7 +8,7 @@ sqlite3 = require 'sqlite3'     # https://github.com/developmentseed/node-sqlite
 # ====================================================
 
 # Open database and create table if not set
-db = new sqlite3.Database 'database.sqlite'
+db = new sqlite3.Database "#{__dirname}/../database.sqlite"
 
 # Create table structure
 tableStructure = """

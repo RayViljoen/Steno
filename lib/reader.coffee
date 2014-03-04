@@ -30,7 +30,7 @@ module.exports = (raw) ->
 
 		# Check message is from a valid user
 		unless config.users[sender]
-			elog "Invalid user: #{sender}"
+			console.log "Invalid user: #{sender}"
 			return
 
 		# Get html or text from parsed email

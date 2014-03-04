@@ -10,7 +10,7 @@ db.get (err, daily) ->
 
     # Check messages exist
     return if daily.length is 0
-    
+
     # Body content
     body = ''
 
