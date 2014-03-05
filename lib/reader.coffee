@@ -47,6 +47,7 @@ module.exports = (raw) ->
 
 		# Split at delimiters
 		message = (message.split '--END--')[0]
+		message = (message.split '--End--')[0]
 		message = (message.split '--end--')[0]
 		message = (message.split '-- \n')[0]
 		message = (message.split '-- ')[0]
